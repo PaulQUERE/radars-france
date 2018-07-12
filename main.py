@@ -10,7 +10,7 @@ s.mount('http://stackoverflow.com', HTTPAdapter(max_retries=5))
 
 def endpoint(part):
     return 'https://{base}/{part}?_format=json'.format(
-        base='radars.securite-routiere.gouv.fr',
+        base='radars.securite-routiere.gouv.fr/radars',
         part=part
     )
 
