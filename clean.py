@@ -89,6 +89,8 @@ df.rename(
     inplace=True
 )
 
+df.sort_values(by=['id'], inplace=True)
+
 df.to_csv(
     'data/radars.csv',
     index=False,
