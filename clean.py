@@ -8,6 +8,7 @@ BASE_PATH = 'data'
 
 records = []
 for file in [f for f in listdir(BASE_PATH) if isfile(join(BASE_PATH, f)) and f.endswith('json')]:
+    print(file)
     record = json.load(open(join(BASE_PATH, file), 'r'))
     cols = [
         'itineraireEntree', 'itineraireSortie', 'radarTronconKm',
@@ -46,8 +47,11 @@ for file in [f for f in listdir(BASE_PATH) if isfile(join(BASE_PATH, f)) and f.e
         record['latitude'] = record['traceItineraire']['lat']
         record['longitude'] = record['traceItineraire']['lon']
     if record['radarGeolocalisation'] is not None:
-        record['latitude'] = record['radarGeolocalisation']['lat']
-        record['longitude'] = record['radarGeolocalisation']['lon']
+        splitted_geoloc = record['radarGeolocalisation'].split(" ")
+        print(splitted_geoloc[1][1:])
+        print(splitted_geoloc[2][:-1])
+        record['latitude'] = splitted_geoloc[2][:-1]
+        record['longitude'] = splitted_geoloc[1][1:]
 
     # Parse radarTronconKm
     if record['radarTronconKm'] is not None:
@@ -59,7 +63,7 @@ for file in [f for f in listdir(BASE_PATH) if isfile(join(BASE_PATH, f)) and f.e
     records.append(record)
 
 df = pd.DataFrame(records)
-df['radarInstallDate'] = pd.to_datetime(df['radarInstallDate'], format='%d.%m.%Y')
+df['radarInstallDate'] = pd.to_datetime(df['radarInstallDate'], format='%Y-%m-%dT%H:%M:%S')
 for col in ['created', 'changed']:
     df[col] = pd.to_datetime(df[col], unit='s')
 df.drop(columns=[
